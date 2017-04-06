@@ -30,6 +30,12 @@ var/
 *.manifest
 *.spec
 
+
+test.csv
+test.zip
+training.csv
+training.zip
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
