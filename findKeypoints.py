@@ -52,12 +52,6 @@ def loadTest(path):
 
 
 
-def plot_sample(x, y, axis):
-    img = x.reshape(96, 96)
-    axis.imshow(img, cmap='gray')
-    axis.scatter(y[0::2]*48+48, y[1::2]*48+48, marker='x', s=10)
-
-
 imgs, labels = loadTrainingset(TRAINING_SET)
 
 plt.imshow(imgs[2].reshape(96,96), cmap=plt.get_cmap('gray'))
@@ -105,17 +99,22 @@ f.savefig('./loss.png')
 
 
 
+def plot_sample(x, y, axis):
+    img = x.reshape(96, 96)
+    axis.imshow(img, cmap='gray')
+    axis.scatter(y[0::2], y[1::2], marker='x', s=10)
+
+#predict test images
 X_test = loadTest(TEST_SET)
 y_test = model.predict(X_test)
-#y_test = y_test*48+48
+y_test=y_test*48+48
 fig = plt.figure(figsize=(6,6))
 for i in range(16):
     axis = fig.add_subplot(4,4,i+1,xticks=[],yticks=[])
     plot_sample(X_test[i], y_test[i], axis)
-plt.show()
-fig.savefig('./predicted.png')
-
-y_test[0][1::2]
+    fig.show()
+    pass
+    
 
 def getPredicted(predictedResult, imgId, position):
     '''
@@ -129,6 +128,6 @@ idLoopUp = idLoopUp.as_matrix()
 for i in range(len(idLoopUp)):
     idLoopUp[i][3] = getPredicted(y_test, idLoopUp[i][1],idLoopUp[i][2])
 
-idLoopUp[:,[0,3]]
-
-submission.to_csv('./keypoints_pred.csv', index=True, header=True)
+result = idLoopUp[:,[0,3]]
+result = result.astype(int)
+np.savetxt('keypoints_pred.csv', result, delimiter=',', header="RowId,Location", fmt='%2i')
